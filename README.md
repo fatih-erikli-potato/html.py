@@ -7,7 +7,8 @@ print(
     form(
       {"action": "/", "method": "post"},
       input({"type": "text", "name": "text"}),
-      input({"type": "submit", "value": "ko"})
+      input({"type": "submit", "value": "ko"}),
+      input({"type": "reset", "value": "koma"}),
     )
   )
 )
