@@ -1,6 +1,3 @@
-def html(*tags):
-  return "<!doctype html><html>%s</html>" % "\n".join(tags)
-
 def strip_quote(value):
   return value.replace("\"", "&quot;")
 
@@ -11,46 +8,76 @@ def tag(name, *args):
   if args:
     if isinstance(args[0], dict):
       attrs = args[0]
-      children = args[1:]
-      self_closing = len(children) == 0
+      if len(args) > 1:
+        content = args[1]
+      else:
+        content = None
     else:
       attrs = None
-      children = args
-      self_closing = False
+      content = args[0]
   else:
     attrs = None
-    children = None
-    self_closing = True
+    content = None
+  self_closing = content is None
   html_output = "<"
   html_output += name
   if attrs:
     for k, v in attrs.items():
-      if html_output.endswith(name):
+      if isinstance(v, bool):
+        if v:
+          html_output += " "
+          html_output += k
+      else:
         html_output += " "
-      html_output += k
-      html_output += "="
-      html_output += "\"%s\"" % (strip_quote(v) if isinstance(v, str) else v)
+        html_output += k
+        html_output += "="
+        if isinstance(v, str):
+          v = strip_quote(v)
+        elif isinstance(v, list):
+          v = ' '.join(map(strip_quote, v))
+        elif isinstance(v, dict):
+          v = ';'.join("%s:%s" % (k, strip_quote(v)) for k, v in v.items())
+        html_output += "\"%s\"" % (strip_quote(v) if isinstance(v, str) else v)
   if self_closing:
     html_output += "/>"
   else:
     html_output += ">"
-    html_output += "\n".join(filter(bool, children))
+    html_output += content
     html_output += "</"
     html_output += name
     html_output += ">"
   return html_output
 
-def head(*args): return tag('head', *args)
-def body(*args): return tag('body', *args)
-def title(*args): return tag('title', *args)
-def link(*args): return tag('link', *args)
-def a(*args): return tag('a', *args)
-def img(*args): return tag('img', *args)
-def form(*args): return tag('form', *args)
-def input(*args): return tag('input', *args)
-def label(*args): return tag('label', *args)
-def body(*args): return tag('body', *args)
-def div(*args): return tag('div', *args)
-def style(*args): return tag('style', *args)
-def svg(*args): return tag('svg', *args)
-def polygon(*args): return tag('polygon', *args)
+def make_html_w_doctype(array):
+  html = ""
+  html += "<!doctype html>"
+  html += make_html(array)
+  return html
+
+def make_html(*array):
+  tag_name = array[0]
+  if len(array) > 1:
+    if isinstance(array[1], dict):
+      attrs = array[1]
+      content = array[2:]
+    else:
+      attrs = None
+      content = array[1:]
+  else:
+    attrs = None
+    content = None
+  html_content = ""
+  if content:
+    for definition in content:
+      if isinstance(definition, list):
+        html_content += make_html(*definition)
+      else:
+        if isinstance(definition, int):
+          definition = str(definition)
+        html_content += strip_lt_gt(definition)
+  tag_args = [tag_name]
+  if attrs:
+    tag_args.append(attrs)
+  if html_content:
+    tag_args.append(html_content)
+  return tag(*tag_args)
