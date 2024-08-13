@@ -3,13 +3,12 @@ Example
 ```python
 from html import html, form, input
 print(
-  html(
-    form(
-      {"action": "/", "method": "post"},
-      input({"type": "text", "name": "text"}),
-      input({"type": "submit", "value": "ko"}),
-      input({"type": "reset", "value": "koma"}),
-    )
-  )
+  make_html(
+    "form",
+    {"action": "/login", "method": "post"},
+    ["label", "Username", ["input", {"type": "text"}]],
+    ["label", "Password", ["input", {"type": "password"}]],
+    ["input", {"type": "submit"}]
+  ) 
 )
 ```
