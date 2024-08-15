@@ -1,7 +1,7 @@
 Example
 
 ```python
-from html import html, form, input
+from html import make_html
 print(
   make_html(
     "form",

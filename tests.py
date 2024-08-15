@@ -1,6 +1,7 @@
-from html import make_html, make_html_w_doctype
+from html import make_html
 
-assert make_html("div") == "<div/>"
+assert make_html("div", 1) == "<div>1</div>"
+assert make_html("div", {"style": {"order": 2}}) == '<div style="order:2"/>'
 assert make_html("div", {"class": "a"}) == '<div class="a"/>'
 assert make_html("div", {"class": ["a", "b"]}) == '<div class="a b"/>'
 assert make_html("input", {"disabled": True}) == '<input disabled/>'

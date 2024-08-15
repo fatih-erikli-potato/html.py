@@ -36,7 +36,7 @@ def tag(name, *args):
         elif isinstance(v, list):
           v = ' '.join(map(strip_quote, v))
         elif isinstance(v, dict):
-          v = ';'.join("%s:%s" % (k, strip_quote(v)) for k, v in v.items())
+          v = ';'.join("%s:%s" % (k, strip_quote(v) if isinstance(v, str) else v) for k, v in v.items())
         html_output += "\"%s\"" % (strip_quote(v) if isinstance(v, str) else v)
   if self_closing:
     html_output += "/>"
