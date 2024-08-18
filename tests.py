@@ -1,7 +1,9 @@
-from html import make_html, div, input, label, form
+from html import make_html, div, input, label, form, img
 
 assert make_html(div(1)) == "<div>1</div>"
 assert make_html(div(1, div(2))) == "<div>1<div>2</div></div>"
+assert make_html(div(1, div(2), div("<"))) == "<div>1<div>2</div><div>&lt;</div></div>"
+assert make_html(img({"alt": 'Quote"s'})) == '<img alt="Quote&quot;s"/>'
 assert make_html(div({"style": {"order": 2}})) == '<div style="order:2"/>'
 assert make_html(div({"class": "a"})) == '<div class="a"/>'
 assert make_html(div({"class": ["a", "b"]})) == '<div class="a b"/>'

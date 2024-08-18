@@ -73,8 +73,9 @@ def make_html(array):
         html_content += make_html(definition)
       else:
         if isinstance(definition, int):
-          definition = str(definition)
-        html_content += strip_lt_gt(definition)
+          html_content += str(definition)
+        else:
+          html_content += strip_lt_gt(definition)
   tag_args = [tag_name]
   if attrs:
     tag_args.append(attrs)
