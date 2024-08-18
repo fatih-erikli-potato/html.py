@@ -54,7 +54,7 @@ def make_html_w_doctype(array):
   html += make_html(array)
   return html
 
-def make_html(*array):
+def make_html(array):
   tag_name = array[0]
   if len(array) > 1:
     if isinstance(array[1], dict):
@@ -70,7 +70,7 @@ def make_html(*array):
   if content:
     for definition in content:
       if isinstance(definition, list):
-        html_content += make_html(*definition)
+        html_content += make_html(definition)
       else:
         if isinstance(definition, int):
           definition = str(definition)
@@ -81,3 +81,10 @@ def make_html(*array):
   if html_content:
     tag_args.append(html_content)
   return tag(*tag_args)
+
+def form(*args): return ['form', *args]
+def div(*args): return ['div', *args]
+def label(*args): return ['label', *args]
+def input(*args): return ['input', *args]
+def a(*args): return ['a', *args]
+def img(*args): return ['img', *args]
