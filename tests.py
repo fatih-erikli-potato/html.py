@@ -1,6 +1,12 @@
 from html import make_html, div, input, label, form, img
 
-assert make_html(div(1)) == "<div>1</div>"
+assert make_html(["div", 1]) == "<div>1</div>"
+try:
+  make_html(["script", 1]) == "<div>1</div>"
+except Exception:
+  pass
+else:
+  assert False, "Only safe tags must be allowed."
 assert make_html(div(1, div(2))) == "<div>1<div>2</div></div>"
 assert make_html(div(1, div(2), div("<"))) == "<div>1<div>2</div><div>&lt;</div></div>"
 assert make_html(img({"alt": 'Quote"s'})) == '<img alt="Quote&quot;s"/>'

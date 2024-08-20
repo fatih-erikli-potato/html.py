@@ -54,8 +54,12 @@ def make_html_w_doctype(array):
   html += make_html(array)
   return html
 
+allowed_tags = ["form", "div", "label", "input", "a", "img"]
+
 def make_html(array):
   tag_name = array[0]
+  if not tag_name in allowed_tags:
+   raise Exception("Only %s tags allowed." % ', '.join(allowed_tags))
   if len(array) > 1:
     if isinstance(array[1], dict):
       attrs = array[1]
