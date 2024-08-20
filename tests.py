@@ -2,7 +2,7 @@ from html import make_html, div, input, label, form, img
 
 assert make_html(["div", 1]) == "<div>1</div>"
 try:
-  make_html(["script", 1]) == "<div>1</div>"
+  make_html(["script", 1])
 except Exception:
   pass
 else:
