@@ -2,11 +2,11 @@ def strip_quote(value):
   return value.replace("\"", "&quot;")
 
 def strip_lt_gt(value):
-  return value.replace("<", "&lt;").replace(">", "&gt;");
+  return value.replace("<", "&lt;").replace(">", "&gt;")
 
 def tag(name, *args):
   if not name in allowed_tags:
-   raise Exception("Only %s tags allowed." % ', '.join(allowed_tags))
+   raise Exception("Invalid tag %s. Only %s allowed." % (name, ', '.join(allowed_tags)))
   if args:
     if isinstance(args[0], dict):
       attrs = args[0]
@@ -44,25 +44,45 @@ def tag(name, *args):
     html_output += "/>"
   else:
     html_output += ">"
-    html_output += content
+    html_output += content or ""
     html_output += "</"
     html_output += name
     html_output += ">"
   return html_output
 
-def make_html_w_doctype(array):
-  html = ""
-  html += "<!doctype html>"
-  html += make_html(array)
+def make_html_w_doctype(attrs, tag_definition):
+  html = "<!doctype html>"
+  html += "<html>"
+  html += "<head>"
+  if 'stylesheet_url' in attrs:
+    html += '<link rel="stylesheet" type="text/css" href="%s" />' % strip_quote(attrs["stylesheet_url"])
+  if 'favicon_url' in attrs:
+    html += '<link rel="icon" href="%s" />' % strip_quote(attrs["favicon_url"])
+  html += "<title>"
+  html += strip_lt_gt(attrs.get("title"))
+  html += "</title>"
+  html += "</head>"
+  html += "<body>"
+  html += make_html(tag_definition)
+  html += "</body>"
+  html += "</html>"
   return html
 
-allowed_tags = ["form", "div", "label", "input", "a", "img"]
+allowed_tags = ["form", "div", "span", "label",
+                "input", "a", "svg", "polygon", "img"]
+
+allowed_attrs = ["src", "style", "class", "alt", "href", "points",
+                 "viewBox", "fill", "stroke", "action", "disabled",
+                 "method", "type", "value"]
 
 def make_html(array):
   tag_name = array[0]
   if len(array) > 1:
     if isinstance(array[1], dict):
       attrs = array[1]
+      for key in attrs.keys():
+        if key not in allowed_attrs:
+          raise Exception("Invalid attribute %s. Only %s allowed." % (key, ', '.join(allowed_attrs)))
       content = array[2:]
     else:
       attrs = None
@@ -73,7 +93,9 @@ def make_html(array):
   html_content = ""
   if content:
     for definition in content:
-      if isinstance(definition, list):
+      if not definition:
+        continue
+      elif isinstance(definition, list):
         html_content += make_html(definition)
       else:
         if isinstance(definition, int):
@@ -89,7 +111,16 @@ def make_html(array):
 
 def form(*args): return ['form', *args]
 def div(*args): return ['div', *args]
+def img(*args): return ['img', *args]
+def span(*args): return ['span', *args]
 def label(*args): return ['label', *args]
 def input(*args): return ['input', *args]
 def a(*args): return ['a', *args]
-def img(*args): return ['img', *args]
+def svg(*args): return ['svg', *args]
+def polygon(*args): return ['polygon', *args]
+
+def svg_polygon_points(points):
+  points_string = []
+  for (x, y) in points:
+    points_string.append("%s, %s" % (str(x), str(y)))
+  return " ".join(points_string)
