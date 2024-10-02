@@ -13,6 +13,8 @@ except Exception:
   pass
 else:
   assert False, "Only safe attrs must be allowed."
+assert make_html(img({"width": "1px"})) == "<img width=\"1px\"/>"
+assert make_html(div(0)) == "<div>0</div>"
 assert make_html(div(1, div(2))) == "<div>1<div>2</div></div>"
 assert make_html(div(1, div(2), div("<"))) == "<div>1<div>2</div><div>&lt;</div></div>"
 assert make_html(img({"alt": 'Quote"s'})) == '<img alt="Quote&quot;s"/>'

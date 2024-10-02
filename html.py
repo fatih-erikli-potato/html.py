@@ -39,7 +39,7 @@ def tag(name, *args):
           v = ' '.join(map(strip_quote, v))
         elif isinstance(v, dict):
           v = ';'.join("%s:%s" % (k, strip_quote(v) if isinstance(v, str) else v) for k, v in v.items())
-        html_output += "\"%s\"" % (strip_quote(v) if isinstance(v, str) else v)
+        html_output += "\"%s\"" % v
   if self_closing:
     html_output += "/>"
   else:
@@ -68,12 +68,10 @@ def make_html_w_doctype(attrs, tag_definition):
   html += "</html>"
   return html
 
-allowed_tags = ["form", "div", "span", "label",
-                "input", "a", "svg", "polygon", "img"]
+allowed_tags = ["form", "div", "label", "input", "a", "img"]
 
-allowed_attrs = ["src", "style", "class", "alt", "href", "points",
-                 "viewBox", "fill", "stroke", "action", "disabled",
-                 "method", "type", "value"]
+allowed_attrs = ["src", "style", "class", "alt", "href", "action", "disabled",
+                 "method", "type", "value", "width", "height"]
 
 def make_html(array):
   tag_name = array[0]
@@ -93,7 +91,7 @@ def make_html(array):
   html_content = ""
   if content:
     for definition in content:
-      if not definition:
+      if not definition and not isinstance(definition, int):
         continue
       elif isinstance(definition, list):
         html_content += make_html(definition)
@@ -112,15 +110,6 @@ def make_html(array):
 def form(*args): return ['form', *args]
 def div(*args): return ['div', *args]
 def img(*args): return ['img', *args]
-def span(*args): return ['span', *args]
 def label(*args): return ['label', *args]
 def input(*args): return ['input', *args]
 def a(*args): return ['a', *args]
-def svg(*args): return ['svg', *args]
-def polygon(*args): return ['polygon', *args]
-
-def svg_polygon_points(points):
-  points_string = []
-  for (x, y) in points:
-    points_string.append("%s, %s" % (str(x), str(y)))
-  return " ".join(points_string)
