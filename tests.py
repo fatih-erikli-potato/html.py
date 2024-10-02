@@ -13,18 +13,18 @@ except Exception:
   pass
 else:
   assert False, "Only safe attrs must be allowed."
-assert make_html(img({"width": "1px"})) == "<img width=\"1px\"/>"
+assert make_html(img({"width": "1px"})) == "<img width=\"1px\">"
 assert make_html(div(0)) == "<div>0</div>"
 assert make_html(div(1, div(2))) == "<div>1<div>2</div></div>"
 assert make_html(div(1, div(2), div("<"))) == "<div>1<div>2</div><div>&lt;</div></div>"
-assert make_html(img({"alt": 'Quote"s'})) == '<img alt="Quote&quot;s"/>'
-assert make_html(div({"style": {"order": 2}})) == '<div style="order:2"/>'
-assert make_html(div({"class": "a"})) == '<div class="a"/>'
-assert make_html(div({"class": ["a", "b"]})) == '<div class="a b"/>'
-assert make_html(input({"disabled": True})) == '<input disabled/>'
-assert make_html(input({"disabled": False})) == '<input/>'
+assert make_html(img({"alt": 'Quote"s'})) == '<img alt="Quote&quot;s">'
+assert make_html(div({"style": {"order": 2}}, 1)) == '<div style="order:2">1</div>'
+assert make_html(div({"class": "a"}, 1)) == '<div class="a">1</div>'
+assert make_html(div({"class": ["a", "b"]}, 1)) == '<div class="a b">1</div>'
+assert make_html(input({"disabled": True})) == '<input disabled>'
+assert make_html(input({"disabled": False})) == '<input>'
 assert make_html(label({"style": {"background": "black", "color": "white"}}, input())) == \
-  '<label style="background:black;color:white"><input/></label>'
+  '<label style="background:black;color:white"><input></label>'
 assert make_html(
   form(
     {"action": "/login", "method": "post"},
@@ -34,6 +34,6 @@ assert make_html(
     )
 ) == \
   '<form action="/login" method="post">' \
-  '<label>Username<input type="text"/></label>' \
-  '<label>Password<input type="text"/></label>' \
-  '<input type="submit"/></form>'
+  '<label>Username<input type="text"></label>' \
+  '<label>Password<input type="text"></label>' \
+  '<input type="submit"></form>'

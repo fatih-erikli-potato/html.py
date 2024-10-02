@@ -41,7 +41,7 @@ def tag(name, *args):
           v = ';'.join("%s:%s" % (k, strip_quote(v) if isinstance(v, str) else v) for k, v in v.items())
         html_output += "\"%s\"" % v
   if self_closing:
-    html_output += "/>"
+    html_output += ">"
   else:
     html_output += ">"
     html_output += content or ""
