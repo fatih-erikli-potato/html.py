@@ -1,6 +1,9 @@
 def strip_quote(value):
   return value.replace("\"", "&quot;")
 
+def strip_amp(value):
+  return value.replace("&", "&amp;")
+
 def strip_lt_gt(value):
   return value.replace("<", "&lt;").replace(">", "&gt;")
 
@@ -99,7 +102,7 @@ def make_html(array):
         if isinstance(definition, int):
           html_content += str(definition)
         else:
-          html_content += strip_lt_gt(definition)
+          html_content += strip_lt_gt(strip_amp(definition))
   tag_args = [tag_name]
   if attrs:
     tag_args.append(attrs)
